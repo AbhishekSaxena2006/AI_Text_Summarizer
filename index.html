@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartSum – Student Text Summarizer</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- jsPDF library — used to download summary as PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="header-top">
+      <div class="logo-pill"><span>📚</span> <span data-i18n="studentTool">Student Tool</span></div>
+      <!-- Language toggle button -->
+      <button class="lang-btn" onclick="toggleLanguage()" title="Toggle Hindi/English">
+        <span id="langLabel">🌐 हिंदी</span>
+      </button>
+    </div>
+    <h1><span data-i18n="headLine1">Summarize</span> <span class="grad" data-i18n="headLine2">Smarter</span>,<br><span data-i18n="headLine3">Study Better</span></h1>
+    <p data-i18n="subTitle">Paste any long answer or paragraph — get a clean summary instantly. No AI API needed.</p>
+  </header>
+
+  <!-- ===== MAIN CARD ===== -->
+  <div class="card">
+
+    <!-- FILE UPLOAD: Upload .txt or .pdf file -->
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📂</div>
+      <p class="upload-label" data-i18n="uploadLabel">Click to upload a <strong>.txt</strong> file, or paste text below</p>
+      <input type="file" id="fileInput" accept=".txt" style="display:none" onchange="handleFileUpload(event)" />
+    </div>
+
+    <!-- DIVIDER between upload and textarea -->
+    <div class="or-divider"><span data-i18n="orText">OR</span></div>
+
+    <!-- STEP 1: Text input -->
+    <label class="label" data-i18n="step1">① Paste your text below</label>
+    <textarea id="inputText" placeholder="Paste a long paragraph, answer, or notes here…"></textarea>
+    <div class="meta-row">
+      <!-- Word count and estimated reading time -->
+      <span class="meta-badge" id="wordCount">0 words</span>
+      <span class="meta-badge" id="readTime">~0 min read</span>
+      <span class="char-count"><span id="charCount">0</span> <span data-i18n="chars">characters</span></span>
+    </div>
+
+    <!-- Error message for empty input -->
+    <div class="error-msg" id="errorMsg" data-i18n="errorMsg">
+      ⚠️ Please paste some text before generating a summary.
+    </div>
+
+    <!-- STEP 2: Controls row -->
+    <div class="controls">
+      <div class="select-wrap">
+        <label class="label" data-i18n="step2">② Summary length</label>
+        <select id="lengthSelect">
+          <option value="short" data-i18n="short">🟢 Short (1–2 sentences)</option>
+          <option value="medium" selected data-i18n="medium">🔵 Medium (2–3 sentences)</option>
+          <option value="long" data-i18n="long">🟣 Long (4–5 sentences)</option>
+        </select>
+      </div>
+      <button id="summarizeBtn" onclick="generateSummary()">✨ <span data-i18n="generateBtn">Generate Summary</span></button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- STEP 3: Output section — hidden until summary is generated -->
+    <div class="output-section" id="outputSection">
+
+      <div class="output-header">
+        <label class="label" data-i18n="step3">③ Your Summary</label>
+        <div class="output-actions">
+          <!-- Download summary as PDF -->
+          <button class="action-btn" onclick="downloadPDF()" title="Download as PDF">📄 <span data-i18n="downloadPDF">Download PDF</span></button>
+          <!-- Copy to clipboard -->
+          <button class="action-btn copy-btn" onclick="copySummary()">📋 <span data-i18n="copy">Copy</span></button>
+        </div>
+      </div>
+
+      <!-- Summary display box with keyword highlights -->
+      <div class="summary-box" id="summaryBox">
+        <p id="summaryOutput"></p>
+      </div>
+
+      <!-- Stats: selected vs total sentences -->
+      <div class="stats">
+        <span class="badge green" id="statSelected"></span>
+        <span class="badge blue"  id="statTotal"></span>
+        <span class="badge yellow" id="statKeywords"></span>
+      </div>
+
+    </div>
+
+  </div><!-- end .card -->
+
+  <!-- ===== HISTORY SECTION ===== -->
+  <!-- Shows the last 5 summaries the user generated -->
+  <div class="history-section" id="historySection" style="display:none">
+    <div class="history-header">
+      <h2 class="history-title">🕓 <span data-i18n="historyTitle">Summary History</span></h2>
+      <button class="clear-btn" onclick="clearHistory()" data-i18n="clearAll">Clear All</button>
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+  <footer>Built with pure HTML · CSS · JavaScript &nbsp;·&nbsp; No APIs used</footer>
+
+</div><!-- end .wrapper -->
+
+<script src="script.js"></script>
+</body>
+</html>
